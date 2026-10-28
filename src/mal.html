@@ -35,7 +35,7 @@ main{flex:1;display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:6px;padding:6p
 #kb3{left:38%;top:80%;width:33%;height:17%}
 #vb{left:58%;top:27%;width:20%;height:42%}
 /* midtre */
-#mid{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #fff8;background:radial-gradient(circle at 50% 45%,#1a0000 0%,#000 70%);padding:10px;text-align:center;min-height:0}
+#mid{position:relative;z-index:45;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #fff8;background:radial-gradient(circle at 50% 45%,#1a0000 0%,#000 70%);padding:10px;text-align:center;min-height:0}
 #kicker{letter-spacing:.35em;font-size:clamp(11px,1.5vw,18px);color:#ffffffcc;text-transform:uppercase}
 #name{font-size:clamp(18px,2.6vw,38px);font-weight:900;letter-spacing:.12em;text-transform:uppercase;margin:.4em 0 .2em}
 #sub{font-size:clamp(10px,1.2vw,15px);letter-spacing:.3em;color:#ff4040;margin-bottom:1.2vh}
@@ -142,15 +142,17 @@ msgTick(); setInterval(msgTick,4000);
 const hearts=$('hearts');let nh=0;
 const HP='<path fill="#ff0a1e" d="M50 88C20 62 2 44 2 25 2 11 12 2 25 2c10 0 19 6 25 15C56 8 65 2 75 2c13 0 23 9 23 23 0 19-18 37-48 63z"/>';
 function addHeart(){
- let x,y,tries=0;
- do{x=Math.random()*100;y=Math.random()*100;tries++}
- while(tries<20&&x>24&&x<76&&y>30&&y<72);
- const sz=18+Math.random()*52;
- const e=document.createElementNS('http://www.w3.org/2000/svg','svg');
- e.setAttribute('viewBox','0 0 100 90');e.innerHTML=HP;e.classList.add('ny');
- e.style.cssText='left:calc('+x+'% - '+sz/2+'px);top:calc('+y+'% - '+sz/2+'px);width:'+sz+'px;height:'+sz*.9+'px;--d:'+(.8+Math.random()*.7)+'s';
- e.style.setProperty('--dl',(Math.random()*-1)+'s');
- hearts.appendChild(e);nh++;
+ const r=$('mid').getBoundingClientRect(),W=innerWidth,H=innerHeight;
+ const sz=18+Math.random()*52,m=sz/2+14;
+ for(let i=0;i<40;i++){
+  const x=Math.random()*W,y=Math.random()*H;
+  if(x>r.left-m&&x<r.right+m&&y>r.top-m&&y<r.bottom+m)continue;
+  const e=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  e.setAttribute('viewBox','0 0 100 90');e.innerHTML=HP;e.classList.add('ny');
+  e.style.cssText='left:'+(x-sz/2)+'px;top:'+(y-sz/2)+'px;width:'+sz+'px;height:'+sz*.9+'px;--d:'+(.8+Math.random()*.7)+'s;--dl:'+(Math.random()*-1)+'s';
+  hearts.appendChild(e);nh++;return;
+ }
+ nh++;
 }
 function syncHearts(frac){
  const want=Math.round(Math.pow(frac,2)*90);
