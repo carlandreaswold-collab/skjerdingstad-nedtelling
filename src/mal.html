@@ -119,7 +119,8 @@ body.slutt #finale{display:flex}
 </div>
 
 <script>
-const TEST=/[?&]test=1/.test(location.search);
+const TEST=/[?&](test|slutt)=1/.test(location.search);
+const SLUTT=/[?&]slutt=1/.test(location.search);
 const START=new Date();START.setHours(6,0,0,0);
 const END=new Date();END.setHours(13,0,0,0);
 let target=END.getTime();
@@ -185,6 +186,7 @@ function finale(){
  setTimeout(()=>document.body.classList.add('slutt'),150);
 }
 tick();setInterval(tick,100);
+if(SLUTT){slutt=true;document.body.classList.add('slutt');}
 if(!TEST&&location.protocol!=='file:'){
  const sig=r=>r.headers.get('etag')||r.headers.get('last-modified')||r.headers.get('content-length');
  let base=null;
